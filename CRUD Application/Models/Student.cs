@@ -30,7 +30,7 @@ namespace CRUD_Application.Models
 
         // Navigation Property
         [ForeignKey(nameof(DepartmentId))]
-        [JsonIgnore]
+        //[JsonIgnore]
         public Department? Department { get; set; }
     }
 }

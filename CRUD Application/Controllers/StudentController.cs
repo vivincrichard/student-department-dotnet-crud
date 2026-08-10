@@ -16,18 +16,30 @@ namespace CRUD_Application.Controllers
             _service = service;
         }
 
+        // GET: /api/Student
+        // GET: /api/Student?embed=department
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(
+            [FromQuery] string? embed = null)
         {
-            return Ok(await _service.GetAllStudentsAsync());
+            return Ok(
+                await _service.GetAllStudentsAsync(embed));
         }
 
+        // GET: /api/Student/1
+        // GET: /api/Student/1?embed=department
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(
+            int id,
+            [FromQuery] string? embed = null)
         {
             try
             {
-                var student = await _service.GetStudentByIdAsync(id);
+                var student =
+                    await _service.GetStudentByIdAsync(
+                        id,
+                        embed);
+
                 return Ok(student);
             }
             catch (Exception ex)
@@ -38,6 +50,7 @@ namespace CRUD_Application.Controllers
                 });
             }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Create(StudentDto dto)

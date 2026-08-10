@@ -13,20 +13,34 @@ namespace CRUD_Application.Repositories
         {
             _context = context;
         }
-
-        public async Task<List<Student>> GetAllAsync()
+        public async Task<List<Student>> GetAllAsync(
+           bool includeDepartment = false)
         {
-            return await _context.Students
-                                 .Include(s => s.Department)
-                                 .ToListAsync();
+            IQueryable<Student> query = _context.Students;
+
+            if (includeDepartment)
+            {
+                query = query.Include(s => s.Department);
+            }
+
+            return await query.ToListAsync();
         }
 
-        public async Task<Student?> GetByIdAsync(int id)
+        public async Task<Student?> GetByIdAsync(
+           int id,
+           bool includeDepartment = false)
         {
-            return await _context.Students
-                                 .Include(s => s.Department)
-                                 .FirstOrDefaultAsync(s => s.StudentId == id);
+            IQueryable<Student> query = _context.Students;
+
+            if (includeDepartment)
+            {
+                query = query.Include(s => s.Department);
+            }
+
+            return await query
+                .FirstOrDefaultAsync(s => s.StudentId == id);
         }
+
 
         public async Task<Student?> GetByEmailAsync(string email)
         {

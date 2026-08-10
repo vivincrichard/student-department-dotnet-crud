@@ -4,9 +4,10 @@ namespace CRUD_Application.Repositories.Interface
 {
     public interface IStudentRepository
     {
-        Task<List<Student>> GetAllAsync();
-
-        Task<Student?> GetByIdAsync(int id);
+        Task<List<Student>> GetAllAsync(bool includeDepartment = false);
+        Task<Student?> GetByIdAsync(
+            int id,
+            bool includeDepartment = false);
 
         Task<Student?> GetByEmailAsync(string email);
 

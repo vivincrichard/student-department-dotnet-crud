@@ -21,18 +21,31 @@ namespace CRUD_Application.Services
             _departmentRepository = departmentRepository;
         }
 
-        public async Task<List<Student>> GetAllStudentsAsync()
+        public async Task<List<Student>> GetAllStudentsAsync(
+            string? embed = null)
         {
-            var students = await _repository.GetAllAsync();
-            return students.ToList();
+            bool includeDepartment = HasEmbed(
+                embed,
+                "department");
+
+            return await _repository.GetAllAsync(
+                includeDepartment);
         }
 
-        public async Task<Student?> GetStudentByIdAsync(int id)
+        public async Task<Student?> GetStudentByIdAsync(
+            int id,
+            string? embed = null)
         {
-            var student = await _repository.GetByIdAsync(id);
+            bool includeDepartment = HasEmbed(
+                embed,
+                "department");
+
+            var student = await _repository.GetByIdAsync(
+                id,
+                includeDepartment);
 
             if (student == null)
-                throw new Exception("ID not found");
+                throw new Exception("Student not found.");
 
             return student;
         }
@@ -104,6 +117,22 @@ namespace CRUD_Application.Services
             await _repository.DeleteAsync(student);
 
             return true;
+        }
+
+        private static bool HasEmbed(
+           string? embed,
+           string value)
+        {
+            if (string.IsNullOrWhiteSpace(embed))
+                return false;
+
+            return embed
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Any(x =>
+                    x.Trim()
+                     .Equals(
+                         value,
+                         StringComparison.OrdinalIgnoreCase));
         }
     }
 }

@@ -5,36 +5,36 @@ using CRUD_Application.Repositories.Interface;
 using CRUD_Application.Services;
 using CRUD_Application.Services.Interface;
 using Microsoft.EntityFrameworkCore;
-using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add Controllers
+builder.Services.AddControllers();
 
-
-builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    });
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// OpenAPI / Swagger
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Database
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-options.UseSqlServer(
-builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+// Repositories
+builder.Services.AddScoped<IStudentRepository,StudentRepository>();
+builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
+
+// Services
 builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<IDepartmentService,DepartmentService>();
 
-builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
-builder.Services.AddScoped<IDepartmentService, DepartmentService>();
+// Authorization
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

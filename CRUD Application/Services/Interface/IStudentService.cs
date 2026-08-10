@@ -5,9 +5,12 @@ namespace CRUD_Application.Services.Interface
 {
     public interface IStudentService
     {
-        Task<List<Student>> GetAllStudentsAsync();
+        Task<List<Student>> GetAllStudentsAsync(
+            string? embed = null);
 
-        Task<Student?> GetStudentByIdAsync(int id);
+        Task<Student?> GetStudentByIdAsync(
+            int id,
+            string? embed = null);
 
         Task<Student> CreateStudentAsync(StudentDto dto);
 
