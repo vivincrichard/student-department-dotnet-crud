@@ -1,0 +1,19 @@
+﻿using CRUD_Application.Models;
+
+namespace CRUD_Application.Repositories.Interface
+{
+    public interface IStudentRepository
+    {
+        Task<List<Student>> GetAllAsync();
+
+        Task<Student?> GetByIdAsync(int id);
+
+        Task<Student?> GetByEmailAsync(string email);
+
+        Task<Student> AddAsync(Student student);
+
+        Task UpdateAsync(Student student);
+
+        Task DeleteAsync(Student student);
+    }
+}
