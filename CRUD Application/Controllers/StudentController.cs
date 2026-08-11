@@ -22,93 +22,61 @@ namespace CRUD_Application.Controllers
         public async Task<IActionResult> GetAll(
             [FromQuery] string? embed = null)
         {
-            return Ok(
-                await _service.GetAllStudentsAsync(embed));
+            var students =
+                await _service.GetAllStudentsAsync(embed);
+
+            return Ok(students);
         }
 
-        // GET: /api/Student/1
-        // GET: /api/Student/1?embed=department
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(
             int id,
             [FromQuery] string? embed = null)
         {
-            try
-            {
-                var student =
-                    await _service.GetStudentByIdAsync(
-                        id,
-                        embed);
+            var student =
+                await _service.GetStudentByIdAsync(
+                    id,
+                    embed);
 
-                return Ok(student);
-            }
-            catch (Exception ex)
-            {
-                return NotFound(new
-                {
-                    message = ex.Message
-                });
-            }
+            return Ok(student);
         }
 
-
         [HttpPost]
-        public async Task<IActionResult> Create(StudentDto dto)
+        public async Task<IActionResult> Create(
+            [FromBody] StudentDto dto)
         {
-            try
-            {
-                var student = await _service.CreateStudentAsync(dto);
+            var student =
+                await _service.CreateStudentAsync(dto);
 
-                return CreatedAtAction(
-                    nameof(GetById),
-                    new { id = student.StudentId },
-                    student
-                );
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new
-                {
-                    message = ex.Message
-                });
-            }
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = student.StudentId },
+                student);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, StudentDto dto)
+        public async Task<IActionResult> Update(
+            int id,
+            [FromBody] StudentDto dto)
         {
-            try
-            {
-                var result = await _service.UpdateStudentAsync(id, dto);
+            var student =
+                await _service.UpdateStudentAsync(
+                    id,
+                    dto);
 
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new
-                {
-                    message = ex.Message
-                });
-            }
+            return Ok(student);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
+            await _service.DeleteStudentAsync(id);
+
+            return Ok(new
             {
-                var result = await _service.DeleteStudentAsync(id);
-
-
-                return Ok(result);
-            } catch (Exception ex)
-            {
-                return BadRequest(new
-                {
-                    message = ex.Message
-                });
-
-            }
+                success = true,
+                message = "Student deleted successfully."
+            });
         }
     }
 }

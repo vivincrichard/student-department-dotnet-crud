@@ -1,4 +1,5 @@
 ﻿using CRUD_Application.Dtos;
+using CRUD_Application.Handlers.Exceptions;
 using CRUD_Application.Models;
 using CRUD_Application.Repositories;
 using CRUD_Application.Repositories.CollegeManagement.Repositories;
@@ -32,45 +33,50 @@ namespace CRUD_Application.Services
                 includeDepartment);
         }
 
-        public async Task<Student?> GetStudentByIdAsync(
-            int id,
-            string? embed = null)
+        public async Task<Student?> GetStudentByIdAsync(int id,string? embed = null)
         {
-            bool includeDepartment = HasEmbed(
-                embed,
-                "department");
+            bool includeDepartment =
+                HasEmbed(embed, "department");
 
-            var student = await _repository.GetByIdAsync(
-                id,
-                includeDepartment);
+            var student =
+                await _repository.GetByIdAsync(
+                    id,
+                    includeDepartment);
 
             if (student == null)
-                throw new Exception("Student not found.");
+                throw new NotFoundException(
+                    "Student not found.");
 
             return student;
         }
 
         public async Task<Student> CreateStudentAsync(StudentDto dto)
         {
-            if (!new EmailAddressAttribute().IsValid(dto.Email))
-                throw new Exception("Invalid email format.");
-
-            var existingStudent = await _repository.GetByEmailAsync(dto.Email);
+            var existingStudent =
+                await _repository.GetByEmailAsync(
+                    dto.Email);
 
             if (existingStudent != null)
-                throw new Exception("Email already exists.");
+            {
+                throw new ConflictException(
+                    "Email already exists.");
+            }
 
-            // Check Department Exists
-            var department = await _departmentRepository.GetByIdAsync(dto.DepartmentId);
+            var department =
+                await _departmentRepository
+                    .GetByIdAsync(dto.DepartmentId);
 
             if (department == null)
-                throw new Exception("Department not found.");
+            {
+                throw new NotFoundException(
+                    "Department not found.");
+            }
 
             var student = new Student
             {
-                Name = dto.Name,
+                Name = dto.Name.Trim(),
                 Age = dto.Age,
-                Email = dto.Email,
+                Email = dto.Email.Trim(),
                 DepartmentId = dto.DepartmentId
             };
 
