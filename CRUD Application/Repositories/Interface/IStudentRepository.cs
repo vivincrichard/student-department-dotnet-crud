@@ -1,4 +1,6 @@
-﻿using CRUD_Application.Models;
+﻿//using CRUD_Application.Models;
+
+using CRUD_Application.Scaffolded.Models;
 
 namespace CRUD_Application.Repositories.Interface
 {

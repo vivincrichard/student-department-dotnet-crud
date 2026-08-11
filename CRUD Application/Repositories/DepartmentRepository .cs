@@ -1,6 +1,8 @@
-﻿using CRUD_Application.Data;
-using CRUD_Application.Models;
+﻿//using CRUD_Application.Data;
+//using CRUD_Application.Models;
 using CRUD_Application.Repositories.CollegeManagement.Repositories;
+using CRUD_Application.Scaffolded.Data;
+using CRUD_Application.Scaffolded.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRUD_Application.Repositories
@@ -8,9 +10,19 @@ namespace CRUD_Application.Repositories
 
     public class DepartmentRepository : IDepartmentRepository
     {
-        private readonly ApplicationDbContext _context;
 
-        public DepartmentRepository(ApplicationDbContext context)
+        //Code First Approach
+        //private readonly ApplicationDbContext _context;
+
+        //public DepartmentRepository(ApplicationDbContext context)
+        //{
+        //    _context = context;
+        //}
+
+        //DB first Approach
+        private readonly CollegeDbContext _context;
+
+        public DepartmentRepository(CollegeDbContext context)
         {
             _context = context;
         }

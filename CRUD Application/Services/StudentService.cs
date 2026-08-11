@@ -1,9 +1,10 @@
 ﻿using CRUD_Application.Dtos;
 using CRUD_Application.Handlers.Exceptions;
-using CRUD_Application.Models;
+//using CRUD_Application.Models;
 using CRUD_Application.Repositories;
 using CRUD_Application.Repositories.CollegeManagement.Repositories;
 using CRUD_Application.Repositories.Interface;
+using CRUD_Application.Scaffolded.Models;
 using CRUD_Application.Services.Interface;
 using System.ComponentModel.DataAnnotations;
 
@@ -77,7 +78,8 @@ namespace CRUD_Application.Services
                 Name = dto.Name.Trim(),
                 Age = dto.Age,
                 Email = dto.Email.Trim(),
-                DepartmentId = dto.DepartmentId
+                DepartmentId = dto.DepartmentId,
+                PhoneNumber = dto.PhoneNumber
             };
 
             return await _repository.AddAsync(student);

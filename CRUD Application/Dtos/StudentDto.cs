@@ -12,6 +12,10 @@ namespace CRUD_Application.Dtos
         [Required]
         public string Email { get; set; } = string.Empty;
 
+
+        [MaxLength(15)]
+        public string? PhoneNumber { get; set; }
+
         //public string Department { get; set; } = string.Empty;
 
 

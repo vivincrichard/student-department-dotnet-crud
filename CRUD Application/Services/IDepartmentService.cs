@@ -1,6 +1,7 @@
 ﻿using CRUD_Application.Dtos;
-using CRUD_Application.Models;
+//using CRUD_Application.Models;
 using CRUD_Application.Repositories.CollegeManagement.Repositories;
+using CRUD_Application.Scaffolded.Models;
 using CRUD_Application.Services.Interface;
 
 namespace CRUD_Application.Services

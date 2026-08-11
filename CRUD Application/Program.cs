@@ -3,6 +3,7 @@ using CRUD_Application.Handlers.Extensions;
 using CRUD_Application.Repositories;
 using CRUD_Application.Repositories.CollegeManagement.Repositories;
 using CRUD_Application.Repositories.Interface;
+using CRUD_Application.Scaffolded.Data;
 using CRUD_Application.Services;
 using CRUD_Application.Services.Interface;
 using Microsoft.AspNetCore.Mvc;
@@ -19,9 +20,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Database
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//    options.UseSqlServer(
+//        builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Scaffolde Database
+builder.Services.AddDbContext<CollegeDbContext>(
+    options =>
+        options.UseSqlServer(
+            builder.Configuration
+                .GetConnectionString("DefaultConnection")));
 
 // Repositories
 builder.Services.AddScoped<IStudentRepository,StudentRepository>();
