@@ -49,6 +49,7 @@ namespace CRUD_Application.Handlers.Middleware
                 NotFoundException => HttpStatusCode.NotFound,
                 BadRequestException => HttpStatusCode.BadRequest,
                 ConflictException => HttpStatusCode.Conflict,
+                UnauthorizedException => HttpStatusCode.Unauthorized,
                 _ => HttpStatusCode.InternalServerError
             };
 
@@ -64,6 +65,8 @@ namespace CRUD_Application.Handlers.Middleware
                     NotFoundException => exception.Message,
                     BadRequestException => exception.Message,
                     ConflictException => exception.Message,
+                    UnauthorizedException => exception.Message,
+                    ForbiddenException =>exception.Message,
                     _ => "An unexpected error occurred."
                 },
                 Errors = exception switch
@@ -94,6 +97,24 @@ namespace CRUD_Application.Handlers.Middleware
                             Message = exception.Message
                         }
                     },
+                    UnauthorizedException => new[]
+                    {
+                        new ApiError
+                        {
+                            Code = "UNAUTHORIZED",
+                            Message = exception.Message
+                        }
+                    },
+
+                    ForbiddenException => new[]
+                    {
+                        new ApiError
+                        {
+                            Code = "FORBIDDEN",
+                            Message = exception.Message
+                        }
+                    },
+
 
                     _ => null
                 },

@@ -1,3 +1,4 @@
+using CRUD_Application.Configrations;
 using CRUD_Application.Data;
 using CRUD_Application.Handlers.Extensions;
 using CRUD_Application.Repositories;
@@ -5,8 +6,11 @@ using CRUD_Application.Repositories.CollegeManagement.Repositories;
 using CRUD_Application.Repositories.Interface;
 using CRUD_Application.Services;
 using CRUD_Application.Services.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,16 +27,63 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// JWT Configuration
+// Read Jwt section from appsettings.json
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("Jwt"));
+
+var jwtSettings = builder.Configuration
+    .GetSection("Jwt")
+    .Get<JwtSettings>()
+    ?? throw new InvalidOperationException(
+        "JWT configuration is missing.");
+
+
+// Authentication
+builder.Services.AddAuthentication(
+    JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+
+            ValidateAudience = true,
+
+            ValidateLifetime = true,
+
+            ValidateIssuerSigningKey = true,
+
+            ValidIssuer = jwtSettings.Issuer,
+
+            ValidAudience = jwtSettings.Audience,
+
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtSettings.Key)
+            ),
+
+            // Token expires exactly when ExpirationMinutes is reached
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+
+// Authorization
+builder.Services.AddAuthorization();
+
 // Repositories
 builder.Services.AddScoped<IStudentRepository,StudentRepository>();
 builder.Services.AddScoped<IDepartmentRepository,DepartmentRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRefreshTokenRepository,RefreshTokenRepository>();
 
 // Services
 builder.Services.AddScoped<IStudentService, StudentService>();
 builder.Services.AddScoped<IDepartmentService,DepartmentService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
-// Authorization
-builder.Services.AddAuthorization();
+
+
 
 // Global Validation Response
 
@@ -79,6 +130,8 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

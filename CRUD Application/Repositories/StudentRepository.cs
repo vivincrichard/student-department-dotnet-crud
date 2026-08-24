@@ -23,7 +23,9 @@ namespace CRUD_Application.Repositories
                 query = query.Include(s => s.Department);
             }
 
-            return await query.ToListAsync();
+            return await query
+                .OrderBy(s => s.Name)
+                .ToListAsync();
         }
 
         public async Task<Student?> GetByIdAsync(

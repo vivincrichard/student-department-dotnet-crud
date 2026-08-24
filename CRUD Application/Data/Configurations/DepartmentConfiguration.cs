@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CRUD_Application.Configurations
+namespace CRUD_Application.Data.Configurations
 {
     public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
     {
