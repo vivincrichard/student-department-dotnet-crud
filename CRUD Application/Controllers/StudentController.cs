@@ -1,10 +1,12 @@
-﻿using CRUD_Application.Dtos;
+using CRUD_Application.Dtos;
 using CRUD_Application.Models;
 using CRUD_Application.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CRUD_Application.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class StudentController : ControllerBase
